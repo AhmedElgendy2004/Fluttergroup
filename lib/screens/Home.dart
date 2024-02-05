@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:task1/screens/login.dart';
-import 'package:task1/screens/nav_bar_pages/categories_screens.dart';
+// import 'package:task1/screens/nav_bar_pages/categories_screens.dart';
 import 'package:task1/screens/nav_bar_pages/main_screen.dart';
 import 'package:task1/screens/nav_bar_pages/setting_screen.dart';
 
@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
   List<Widget> pages = [
     MainScreen(),
-    Categories(),
+    // Categories(),
     SettingScreen(),
   ];
 
