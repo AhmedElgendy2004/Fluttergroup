@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:task1/screens/Home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -94,36 +95,22 @@ class _LoginState extends State<Login> {
                           border: InputBorder.none,
                           hintText: "Password",
                         ),
-                        // validator: (value) {
-                        //   // 1. Minimum 1 Upper case
-                        //   // 2. Minimum 1 lowercase
-                        //   // 3. Minimum 1 Numeric Number
-                        //   // 4. Minimum 1 Special Character
-                        //   // 5. Common Allow Character ( ! @ # $ & * ~ )
-                        //   RegExp regex = RegExp(
-                        //       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                        //   if (value!.isEmpty) {
-                        //     return 'Please enter password';
-                        //   } else {
-                        //     if (!regex.hasMatch(value)) {
-                        //       return 'Enter (Aa-Zz),(! @ # & * ~)  to password';
-                        //     } else {
-                        //       return null;
-                        //     }
-                        //   }
-                        // },
                         validator: (value) {
-                          // 1. Phone numbers must contain 10 digits.
-                          // 2.In case country code us used, it can be 12 digits. (example country codes: +12, 012)
-                          // 3.No space or no characters allowed between digits
-                          String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                          RegExp regExp = RegExp(pattern);
+                          // 1. Minimum 1 Upper case
+                          // 2. Minimum 1 lowercase
+                          // 3. Minimum 1 Numeric Number
+                          // 4. Minimum 1 Special Character
+                          // 5. Common Allow Character ( ! @ # $ & * ~ )
+                          RegExp regex = RegExp(
+                              r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                           if (value!.isEmpty) {
-                            return 'Please enter phone number';
-                          } else if (regExp.hasMatch(value)) {
-                            return null;
+                            return 'Please enter password';
                           } else {
-                            return 'Enter valid phone number';
+                            if (!regex.hasMatch(value)) {
+                              return 'Enter (Aa-Zz),(! @ # & * ~)  to password';
+                            } else {
+                              return null;
+                            }
                           }
                         },
                       ),
@@ -133,6 +120,7 @@ class _LoginState extends State<Login> {
                 const SizedBox(height: 10),
 
                 //sign in button
+
                 MaterialButton(
                     elevation: 5.0,
                     color: Colors.green[400],
@@ -142,15 +130,26 @@ class _LoginState extends State<Login> {
                       borderRadius: BorderRadius.circular(50),
                       borderSide: BorderSide.none,
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         if (kDebugMode) {
+                          // ignore: prefer_typing_uninitialized_variables
+
                           print("Valid");
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+
+                          // ignore: prefer_typing_uninitialized_variables
+
+                          await prefs.setString(
+                            'user_phone_number',
+                            'phoneNumberController.text',
+                          );
+                          // ignore: use_build_context_synchronously
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const HomePage.HomePage()),
+                                builder: (context) => const HomePage()),
                           );
                         }
                       } else {

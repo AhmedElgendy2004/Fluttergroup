@@ -3,14 +3,17 @@
 // ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task1/screens/login.dart';
-// import 'package:task1/screens/nav_bar_pages/categories_screens.dart';
+import 'package:task1/screens/nav_bar_pages/categories_screens.dart';
 import 'package:task1/screens/nav_bar_pages/main_screen.dart';
 import 'package:task1/screens/nav_bar_pages/setting_screen.dart';
 
 class HomePage extends StatefulWidget {
   // ignore: non_constant_identifier_names
-  const HomePage.HomePage({super.key});
+  const HomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -20,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   int pageIndex = 0;
   List<Widget> pages = [
     MainScreen(),
-    // Categories(),
+    Categories(),
     SettingScreen(),
   ];
 
@@ -29,11 +32,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(),
       body: pages[pageIndex],
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-        BottomNavigationBarItem(icon: Icon(Icons.category), label: "Category"),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "settings"),
-      ]),
+      bottomNavigationBar: BottomNavigationBar(
+          currentIndex: pageIndex,
+          onTap: onNavBarTapped,
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.category), label: "Category"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: "settings"),
+          ]),
       drawer: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width / 1.5,
@@ -44,7 +52,13 @@ class _HomePageState extends State<HomePage> {
               height: 100,
             ),
             InkWell(
-                onTap: () {
+                onTap: () async {
+                  // ignore: unused_local_variable
+                  final SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  await prefs.clear();
+
+                  // ignore: use_build_context_synchronously
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const Login()),
